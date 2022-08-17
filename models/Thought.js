@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 // Schema to create User model
 const userSchema = new Schema({
@@ -26,6 +26,7 @@ const userSchema = new Schema({
     // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
     toJSON: {
         virtuals: true,
+        getters: true,
     },
     id: false,
 });
