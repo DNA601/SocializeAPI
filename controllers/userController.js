@@ -31,7 +31,40 @@ const userControl = {
                 res.sendStatus(400)
             })
 
-    }
+    },
+    createAUser({ params, body }, res) { //functionality to create a user.
+        User.create(body)
+            .then((userData) => res.json(userData))
+            .catch((err) => res.json(err))
+
+
+    },
+    updateAUser({ params, body }, res) { //update a user
+        User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+            .then((userData) => {
+                if (!userData) {
+                    return res.status(404).json({ message: 'no uer found with id' });
+                }
+                res.json(userData)
+            })
+            .catch((err) => {
+                console.log(err)
+                res.sendStatus(400)
+            })
+
+    },
+
+    addAFriend({ params }, res) {
+        User.findOneAndUpdate({ _id: params.userId }, { $addToSet: { friends: params.friendId } }, { new: true, runValidators: true })
+            .then((userData) => {
+                if (!userData) {
+                    res.status(404).json({ message: 'no user found' });
+                    return;
+                }
+                res.json(userData);
+            })
+            .catch((err) => res.json(err));
+    },
 }
 
 
