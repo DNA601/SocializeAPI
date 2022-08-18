@@ -15,6 +15,7 @@ const userControl = {
                 res.sendStatus(400);
             });
     },
+    ///////////////////////////////////////////////////////////////////////////////////////////
     getUserID({ params }, res) { //getting a user by their id
         User.findOne({ _id: params.id })
             .populate({ path: 'thoughts', select: '-__v' })
@@ -32,6 +33,7 @@ const userControl = {
             })
 
     },
+    ///////////////////////////////////////////////////////////////////////////////////////////
     createAUser({ params, body }, res) { //functionality to create a user.
         User.create(body)
             .then((userData) => res.json(userData))
@@ -39,6 +41,7 @@ const userControl = {
 
 
     },
+    ///////////////////////////////////////////////////////////////////////////////////////////
     updateAUser({ params, body }, res) { //update a user
         User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
             .then((userData) => {
@@ -53,7 +56,7 @@ const userControl = {
             })
 
     },
-
+    ///////////////////////////////////////////////////////////////////////////////////////////
     addAFriend({ params }, res) {
         User.findOneAndUpdate({ _id: params.userId }, { $addToSet: { friends: params.friendId } }, { new: true, runValidators: true })
             .then((userData) => {
@@ -65,6 +68,43 @@ const userControl = {
             })
             .catch((err) => res.json(err));
     },
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    deleteUser({ params }, res) { //deleting a user
+        User.findOneAndDelete({ _id: params.id })
+            .then((userData) => {
+                if (!userData) {
+                    return res.status(404).json({ message: 'no user found' });
+                }
+            })
+
+        .then(() => { res.json({ message: 'user deletion' }); })
+            .catch((err) => res.json(err));
+    },
+    ////////////////////////////////////////////////////////////////////////
+
+    addAFriend({ params }, res) { //adding a friend
+        User.findOneAndUpdate({ _id: params.userId }, { $addToSet: { friends: params.friendId } }, { new: true, runValidators: true })
+            .then((userData) => {
+                if (!userData) {
+                    res.status(404).json({ message: 'no user found' });
+                    return;
+                }
+                res.json(userData);
+            })
+            .catch((err) => res.json(err));
+    },
+    //////////////////////////////////////////////////////////////////////////////
+
+    removeAFriend({ params }, res) { //removing a friend
+        User.findOneAndUpdate({ _id: params.userId }, { $pull: { friends: params.friendId } }, { new: true })
+            .then((userData) => {
+                if (!userData) {
+                    return res.status(404).json({ message: 'no user found' });
+                }
+                res.json(userData);
+            })
+            .catch((err) => res.json(err));
+    }
 }
 
 
