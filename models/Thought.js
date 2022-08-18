@@ -33,8 +33,7 @@ const thoughtSchema = new Schema({
 });
 
 // Create a virtual property.
-userSchema
-    .virtual('reactionCount')
+thoughtSchema.virtual('reactionCount')
     // Getter
     .get(function() {
         return `${this.reactions.length}`;
@@ -43,6 +42,6 @@ userSchema
 
 
 // Initialize our User model
-const Thought = model('thought', thoughtSchema);
+const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;
