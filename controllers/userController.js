@@ -75,6 +75,7 @@ const userControl = {
                 if (!userData) {
                     return res.status(404).json({ message: 'no user found' });
                 }
+                return Thought.deleteMany({ _id: { $in: userData.thoughts } })
             })
 
         .then(() => { res.json({ message: 'user deletion' }); })

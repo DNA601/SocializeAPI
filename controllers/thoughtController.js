@@ -87,6 +87,29 @@ const thoughtControl = {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    removeReaction({ params }, res) {
+        Thought.findOneAndUpdate({ _id: params.thoughtId }, { $pull: { reactions: { reactionId: params.reactionId } } }, { new: true })
+            .then((thoughtData) => res.json(thoughtData))
+            .catch((err) => res.json(err));
+    },
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    deleteAThought({ params }, res) {
+        Thought.findOneAndDelete({ _id: params.id })
+            .then((userData) => {
+                if (!userData) {
+                    return res.status(404).json({ message: 'no thought exists' });
+                }
+                return User.findOneAndUpdate({ thoughts: params.id }, { $pull: { thoughts: params.id } }, { new: true });
+            })
+            .then((userData) => {
+                if (!userData) {
+                    return res
+                        .status(404)
+                        .json({ message: 'thought is born but no id found' });
+                }
+                res.json({ message: 'thought deleted' });
+            })
+            .catch((err) => res.json(err));
+    },
 }
 module.exports = thoughtControl;

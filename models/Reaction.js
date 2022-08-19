@@ -24,14 +24,12 @@ const reactionSchema = new Schema({
         maxlength: 280,
     },
 
+}, {
+    toJSON: {
+        virtuals: true,
+    },
+    id: false,
+}, );
 
-
-});
-// , {
-//     toJSON: {
-//         virtuals: true,
-//     },
-//     id: false,
-// }
 
 module.exports = reactionSchema;
